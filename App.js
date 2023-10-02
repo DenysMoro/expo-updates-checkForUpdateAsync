@@ -1,7 +1,27 @@
+import { useEffect } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import * as Updates from 'expo-updates';
 
 export default function App() {
+  useEffect(() => {
+    async function onFetchUpdateAsync() {
+      try {
+        const update = await Updates.checkForUpdateAsync();
+
+        if (update.isAvailable) {
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
+        }
+      } catch (error) {
+        // You can also add an alert() to see the error message in case of an error when fetching updates.
+        alert(`Error fetching latest Expo update: ${error}`);
+      }
+    }
+
+    onFetchUpdateAsync()
+  }, [])
+
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
